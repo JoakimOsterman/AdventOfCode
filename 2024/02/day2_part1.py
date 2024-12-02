@@ -47,6 +47,8 @@ with open(input_file, 'r') as file:
         
 print(safe_reports) # Answer to part 1
 
+# Part 2
+
 
 
 

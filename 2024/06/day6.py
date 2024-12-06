@@ -1,5 +1,7 @@
 import copy
 from tqdm import tqdm
+from multiprocessing import Pool
+
 
 input_file = 'input.txt'
 
@@ -107,24 +109,27 @@ def check_if_stuck(grid, start):
 
     return stuck
 
+def process_cell(args):
+    original_grid, start, i, j = args
+    if original_grid[i][j] == '.':
+        grid_mutate = copy.deepcopy(original_grid)
+        grid_mutate[i][j] = '#'
+        stuck = check_if_stuck(grid_mutate, start)
+        if stuck:
+            return 1
+    return 0
 
 def test_obstacle_for_loop(grid, start):
     original_grid = copy.deepcopy(grid)
     loop_found = False
     count = 0
-    for i in tqdm(range(len(original_grid))):
-        for j in range(len(original_grid[i])):
-            if original_grid[i][j] == '.':
-                grid_mutate = copy.deepcopy(original_grid)
-                grid_mutate[i][j] = '#'
-                stuck = check_if_stuck(grid_mutate, start)
-                if stuck:
-                    loop_found = True
-                    count += 1
-                    #print(f"Loop found at {i}, {j}")
-    return count
+    tasks = [(original_grid, start, i, j) for i in range(len(original_grid)) for j in range(len(original_grid[i]))]
 
-    
+    with Pool() as pool:
+        results = list(tqdm(pool.imap(process_cell, tasks), total=len(tasks)))
+
+    count = sum(results)
+    return count  
 
 def count_marked(grid):
     count = 0
@@ -144,14 +149,11 @@ def main():
     print(count_marked(grid))
 
     print(count_marked(original_grid))
-    # Part 2
+    # Part 2 1697 was correct
     print(f"Answer to part 2: {test_obstacle_for_loop(original_grid, start)}")
-    # 14083 was too high
-    # 1697 was correct
-
     
 
-
+    
 if __name__ == '__main__':
     main()
 

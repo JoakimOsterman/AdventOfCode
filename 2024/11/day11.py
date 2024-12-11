@@ -1,3 +1,8 @@
+import time
+from collections import Counter
+
+from tqdm import tqdm
+
 def read_input(input_file):
     stones = []
     with open(input_file) as f:
@@ -5,32 +10,34 @@ def read_input(input_file):
     return stones
 
 def blink(stones, num_blinks):
+    start_time = time.time()
+    stone_counts = Counter(stones)
 
     for _ in range(num_blinks):
-        alt_stones = []
-        for i, stone in enumerate(stones):
+        next_counts = Counter()
+        for stone, count in stone_counts.items():
             stone_str = str(stone)
             if stone == 0:
-                #stones[i] = 1
-                alt_stones.append(1)
+                next_counts[1] += count
             elif len(stone_str) % 2 == 0:
                 left = int(stone_str[:len(stone_str) // 2])
                 right = int(stone_str[len(stone_str) // 2:])
-                alt_stones.append(left)
-                alt_stones.append(right)
-                #stones[i] = left
-                #stones.insert(i + 1, right)
+                next_counts[left] += count
+                next_counts[right] += count
             else:
-                #stones[i] = stone * 2024
-                alt_stones.append(stone * 2024)
-        stones = alt_stones[:]
-    return stones
+                next_counts[stone * 2024] += count
+
+        stone_counts = next_counts
+    print(f"Time taken: {time.time() - start_time} seconds")
+    return stone_counts
 
 
 def main():
-    test = [125, 17]
     stones = read_input('input.txt')
-    print(len(blink(stones, 25))) # Correct answer to part 1 was 185205
+    print(sum(blink(stones, 25).values())) # Correct answer to part 1 was 185205
+
+    # Part 2
+    print(sum(blink(stones, 75).values())) # Correct answer to part 2 was 221280540398419
 
 
 if __name__ == '__main__':

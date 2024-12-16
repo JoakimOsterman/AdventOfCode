@@ -104,14 +104,10 @@ def count_distinct_tiles_part_of_optimal_path(paths):
 
 
 def main():
-    # Part 1
-    _, part1 = find_shortest_path(reindeer_map)
-    print(part1)
-
     # Part 2
-    part2_paths, part2_score = find_shortest_path(reindeer_map)
+    part2_paths, part1 = find_shortest_path(reindeer_map)
     part2 = count_distinct_tiles_part_of_optimal_path(part2_paths)
-    print(part2)
+    print(f"Part 1: {part1} \n \n Part 2: {part2}")
 
 if __name__ == '__main__':
     main()

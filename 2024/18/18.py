@@ -54,9 +54,21 @@ def find_shortest_path(start=(0, 0), end=(MEM_SIZE, MEM_SIZE)):
         
     return distance.get(end, inf)        
 
+def find_first_exit_preventing_byte(falling_bytes):
+    for byte in falling_bytes:
+        memory_space[byte] = '#'
+        if find_shortest_path() == inf:
+            return byte
+
 create_memory_space(mem_size = MEM_SIZE)
 simulate_falling_bytes(NUM_OF_BYTES)
 print_memory_space(mem_size = MEM_SIZE)
+
+# Part 1
 print(find_shortest_path())
+ # Part 2
+print(find_first_exit_preventing_byte(falling_bytes))
+
+
     
              

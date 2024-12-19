@@ -1,6 +1,6 @@
 input_file = 'input.txt'
 
-available_towels = []
+available_towels = {}
 desired_patterns = []
 
 with open(input_file, 'r') as f:
